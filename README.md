@@ -6,13 +6,13 @@
 ### QUESTIONS
 
 * **Q1: How many transactions are in data/transactions.csv (exclude the header row)?**
-* :10
+ :10
 * **Q2: How many of those transactions are withdrawals?**
-* :5
+ :5
 * **Q3: How many of those transactions are deposits?**
-* :5
+ :5
 * **Q4: How many DISTINCT account IDs appear in the file?**
-* :3
+ :3
 
 ## OVERVIEW
 This project is built by combining python and bash scripts to achieve it's goal.
