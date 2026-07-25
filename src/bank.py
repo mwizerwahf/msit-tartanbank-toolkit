@@ -1,4 +1,6 @@
 class Account:
+    all_deposits = []
+    all_withdrawals = []
     def __init__(self, account_id, balance: float = 0.0):
         self.account_id = account_id
         if balance < 0:
@@ -20,6 +22,7 @@ class Account:
         if amount <= 0:
             return False
         self._adjust_balance(amount)
+        Account.all_deposits.append(amount)
         return True
 
     def withdraw(self, amount):
@@ -28,6 +31,7 @@ class Account:
         if amount > self.__balance:
             return False
         self._adjust_balance(-amount)
+        Account.all_withdrawals.append(amount)
         return True
 
 
@@ -37,20 +41,30 @@ class Ledger:
         self.flagged = flagged
 
     def apply(self, id, type, amount):
-        if id not in self.accounts:
-            self.accounts[id] = Account(id)
+        account = self.get_or_create(id)
         if type.lower() == "deposit":
-            self.accounts[id].deposit(amount)
+            account.deposit(amount)
             return True
         elif type.lower() == "withdraw":
-            feedback = self.accounts[id].withdraw(amount)
+            feedback = account.withdraw(amount)
             if not feedback:
                 self.flagged.append((id,amount))
                 return True
             return True
 
-    def get_or_create(id):
-        pass
+    def get_or_create(self, id):
+        if id not in self.accounts:
+            self.accounts[id] = Account(id)
+        return self.accounts[id]
 
-    def summary():
-        pass
+    def summary(self):
+        total_deposits = sum(_ for _ in Account.all_deposits)
+        average_deposit = total_deposits / len(Account.all_deposits) if Account.all_deposits else 0
+        total_withdrawals = sum(_ for _ in Account.all_withdrawals)
+        average_withdrawal = total_withdrawals / len(Account.all_withdrawals) if Account.all_withdrawals else 0
+        return {
+            "total_deposits":total_deposits, 
+            "average_deposit":average_deposit, 
+            "total_withdrawals":total_withdrawals,
+            "average_withdrawal":average_withdrawal
+            }

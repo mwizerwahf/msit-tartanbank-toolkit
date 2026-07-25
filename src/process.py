@@ -20,12 +20,14 @@ with open(transactions, 'r') as file:
         amount= float(amount)
         ledger.apply(id,type,amount)
         # print(f"Processed transaction: Account ID: {id}, Type: {type}, Amount: {amount}")
-ledger.apply('A200','Withdraw',1400)
+
 with open(report, 'w') as file:
     file.write(f"FINAL REPORT\n{'='*15}\n")
     for id, account in ledger.accounts.items():
         declined_withdrawals = [t[1] for t in ledger.flagged if t[0] == id]
         file.write(f"Acccount: {id}, Balance:{account.get_balance()}, Transanctions count: {account.transaction_count}, Flagged: {declined_withdrawals}\n")
     total_transaction = sum(account.transaction_count for account in ledger.accounts.values())
-    file.write(f"Total processed transactions: {total_transaction}\n")
-    file.write(f"Flagged transactions: {ledger.flagged}\n")
+    file.write(f"Total processed transactions: {total_transaction}\n\n")
+    file.write(f"Flagged transactions: {ledger.flagged}\n\n")
+    summary = ledger.summary()
+    file.write(f"Total deposits: {summary['total_deposits']}\nAverage deposit: {summary['average_deposit']}\n")
